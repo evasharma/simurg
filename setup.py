@@ -14,5 +14,5 @@ setup(
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 2.7',
     ],
-    install_requires=[]
+    install_requires=['scrapy']
 )
