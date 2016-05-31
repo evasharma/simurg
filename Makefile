@@ -8,7 +8,7 @@ stop:
 	docker rm -f $(name) || true
 
 run: stop
-	docker run -it --rm=true -v $(shell pwd):/var/www --name=$(name) $(registry)/$(name) bash -l
+	docker run -it --rm=true -v $(shell pwd):/var/www --link redis:redis --name=$(name) $(registry)/$(name) bash -l
 
 start: stop
 	docker run -d -v $(shell pwd):/var/www --name=$(name) $(registry)/$(name)
@@ -20,4 +20,4 @@ stop_redis:
 	docker rm -f redis || true
 
 connect_redis:
-	docker run -it --link redis:redis --rm redis redis-cli -h redis -p 6379
+	docker run -it --link redis:redis --rm redis redis-cli -h redis -p 6379:6379
