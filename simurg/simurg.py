@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 from urlparse import urljoin
 import urllib2
+import pprint
+import uuid
 
 
 def get_top_story_links(base_url):
@@ -14,24 +16,20 @@ def get_top_story_links(base_url):
 
 
 def extract_news_links(top_story_links, base_url):
-    story_link_map = dict()
+    batch = []
     for top_story_link in top_story_links:
-        links = []
-        response = urllib2.urlopen(top_story_link)
-        h = response.read()
-        s = BeautifulSoup(h, 'html.parser')
-        news = s.select("div.blended-wrapper.esc-wrapper")
-        for news in news:
-            link = news.select('h2.esc-lead-article-title a')[0]
-            time = news.select('td.al-attribution-cell.timestamp-cell span.al-attribution-timestamp')
-            headline = news.select('span.titletext')
-            print(headline[0].text)
-            for t in time:
-                print '*'*10
-                print t.text
-            links.append(link.get('url'))
-        story_link_map[top_story_link.text] = links
-    return story_link_map
+        top_story_html = urllib2.urlopen(top_story_link).read()
+        soup = BeautifulSoup(top_story_html, 'html.parser')
+        news_elements = soup.select("div.blended-wrapper.esc-wrapper")
+        for news_el in news_elements:
+            news = {}
+            news['id'] = unicode(uuid.uuid4())
+            link = news_el.select('h2.esc-lead-article-title a')[0]
+            headline = news_el.select('span.titletext')[0]
+            news['headline'] = headline.text
+            news['url'] = link.get('href')
+            batch.append(news)
+    return batch
 
 
 base_url = 'http://news.google.com/news'
@@ -39,10 +37,9 @@ base_url = 'http://news.google.com/news'
 
 def extract_news(base_url):
     top_story_links = get_top_story_links(base_url)
-    print(top_story_links)
-    # my_map = extract_news_links(top_story_links, base_url)
-    # for k, v in my_map.iteritems():
-    #    print u'{}: #{} Links'.format(k, len(v))
+    batch = extract_news_links(top_story_links, base_url)
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(batch)
 
 
 extract_news(base_url)
