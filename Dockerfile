@@ -7,6 +7,8 @@ RUN apt-get update && \
 RUN conda install -y \
   beautifulsoup4==4.4.1
 
+RUN pip install redis
+
 WORKDIR /var/www
 ADD . .
 RUN pip install --upgrade pip
