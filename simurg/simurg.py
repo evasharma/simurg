@@ -3,6 +3,7 @@ from urlparse import urljoin
 import urllib2
 import pprint
 import uuid
+import os
 
 
 def get_top_story_links(base_url):
@@ -30,6 +31,12 @@ def extract_news_links(top_story_links, base_url):
             news['url'] = link.get('href')
             batch.append(news)
     return batch
+
+
+def connect_redis():
+    import redis
+    r = redis.StrictRedis(host=os.environ['DB_PORT_6379_TCP_ADDR'], port=os.environ['DB_PORT_6379_TCP_PORT'], db=0)
+    return r
 
 
 base_url = 'http://news.google.com/news'
