@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
 import uuid
 from fetcher import fetch
-import re
 import scrapper
+from wayback import get_wayback_url
 
 
 def build_news(top_story_link, base_url):
@@ -14,4 +14,7 @@ def build_news(top_story_link, base_url):
         news['id'] = unicode(uuid.uuid4())
         news['headline'] = scrapper.get_news_headline(news_el).text
         news['url'] = scrapper.get_news_link(news_el).get('href')
+        print('Before')
+        news['wayback_url'] = get_wayback_url(news['url'])
+        print('After')
         yield news

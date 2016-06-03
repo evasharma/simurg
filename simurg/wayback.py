@@ -1,12 +1,11 @@
 import requests
 import re
-import time
 
 
 wayback_pattern = re.compile(r'web/([^/]*)/')
 
 
-def wayback_url(url, max_attempts=6):
+def get_wayback_url(url):
     """Retrieves the URL for the latest historic copy using Wayback Machine.
     Args:
       urls: The URL for a specific page (canonical URL + forwarding URL's).
@@ -24,33 +23,23 @@ def wayback_url(url, max_attempts=6):
 
     payload = {'url': url}
 
-    attempts = 0
+    try:
+        entry_req = requests.get(index_collection_url, params=payload,
+                                 allow_redirects=False)
 
-    while attempts < max_attempts:
-        try:
-            entry_req = requests.get(index_collection_url, params=payload,
-                                     allow_redirects=False)
+        if entry_req.status_code != requests.codes.ok:
+            return get_wayback_url(url)
 
-            if entry_req.status_code != requests.codes.ok:
-                return wayback_url(url, max_attempts)
+        entry = entry_req.json()
 
-            entry = entry_req.json()
+        if 'closest' not in entry['archived_snapshots']:
+            return get_wayback_url(url)
 
-            if 'closest' not in entry['archived_snapshots']:
-                return wayback_url(url, max_attempts)
+        wayback_url = entry['archived_snapshots']['closest']['url']
+        wayback_url = wayback_pattern.sub(r'web/\g<1>id_/', wayback_url, 1)
+        return wayback_url
 
-            wayback_url = entry['archived_snapshots']['closest']['url']
-            wayback_url = wayback_pattern.sub(r'web/\g<1>id_/', wayback_url, 1)
-            return wayback_url
+    except requests.exceptions.ConnectionError:
+        return None
 
-        except requests.exceptions.ConnectionError:
-            pass
-
-        # Exponential back-off.
-        time.sleep(math.pow(2, attempts))
-        attempts += 1
-
-    raise RuntimeError(
-        'Failed to download URL for %s after %d attempts. Please run the script '
-        'again.' %
-        (url, max_attempts))
+    return None

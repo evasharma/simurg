@@ -2,7 +2,9 @@ def el_to_css_selector(soup, el):
     css_selectors = [class_css_selector, id_css_selector, type_css_selector]
     for selector in css_selectors:
         css_selector = selector(el)
-        if valid(soup, css_selector) and unique(soup, css_selector) and match(soup, css_selector, el):
+        if valid(soup, css_selector) and \
+                unique(soup, css_selector) and \
+                match(soup, css_selector, el):
             return css_selector
     return None
 
