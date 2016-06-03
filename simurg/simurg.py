@@ -1,52 +1,62 @@
+#!/usr/bin/env python
+import logging
+from redis_client import get_redis_client
+import scrapper
+from news_builder import build_news
+from selector_finder import el_to_css_selector
+import scrapper
+from fetcher import fetch
 from bs4 import BeautifulSoup
-from urlparse import urljoin
-import urllib2
-import pprint
-import uuid
-import os
+import re
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+requests_log = logging.getLogger("requests")
+requests_log.addHandler(logging.NullHandler())
+requests_log.propagate = False
+
+redis = get_redis_client()
+
+def find_headline_element(soup, headline):
+    elems = soup(text=re.compile(re.escape(headline)))
+    el = elems[0].parent if len(elems) > 0 else None
+    if el and len(el.text.strip()) > 0:
+        return el
+    return None
+
+def append_html(news):
+    if not redis.exists(news['url']):
+        news['html'] = fetch(news['url'])
+    return news
+
+def append_selector(news):
+    soup = BeautifulSoup(news['html'], 'html.parser')
+    headline_el = find_headline_element(soup, news['headline'])
+    if headline_el:
+        news['selector'] = el_to_css_selector(soup, headline_el)
+    return news
+
+def is_valid(news, field=None):
+    try:
+        news[field]
+    except:
+        return False
+    if news[field]:
+        return True
+    return False
 
 
-def get_top_story_links(base_url):
-    response = urllib2.urlopen(base_url)
-    html = response.read()
-    soup = BeautifulSoup(html, 'html.parser')
-    links = soup.select('div.topic a')
-    hrefs = [link.get('href') for link in links]
-    links = [urljoin(base_url, href) for href in hrefs]
-    return links
-
-
-def extract_news_links(top_story_links, base_url):
-    batch = []
+def main():
+    base_url = 'https://news.google.com/'
+    top_story_links = scrapper.get_top_story_links(base_url)
     for top_story_link in top_story_links:
-        top_story_html = urllib2.urlopen(top_story_link).read()
-        soup = BeautifulSoup(top_story_html, 'html.parser')
-        news_elements = soup.select("div.blended-wrapper.esc-wrapper")
-        for news_el in news_elements:
-            news = {}
-            news['id'] = unicode(uuid.uuid4())
-            link = news_el.select('h2.esc-lead-article-title a')[0]
-            headline = news_el.select('span.titletext')[0]
-            news['headline'] = headline.text
-            news['url'] = link.get('href')
-            batch.append(news)
-    return batch
+        for news in build_news(top_story_link, base_url):
+            news = append_html(news)
+            if is_valid(news, field='html'):
+                append_selector(news)
+                if is_valid(news, field='selector'):
+                    redis.set(news['url'], news['selector'])
 
 
-def connect_redis():
-    import redis
-    r = redis.StrictRedis(host=os.environ['DB_PORT_6379_TCP_ADDR'], port=os.environ['DB_PORT_6379_TCP_PORT'], db=0)
-    return r
-
-
-base_url = 'http://news.google.com/news'
-
-
-def extract_news(base_url):
-    top_story_links = get_top_story_links(base_url)
-    batch = extract_news_links(top_story_links, base_url)
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(batch)
-
-
-extract_news(base_url)
+if __name__ == "__main__":
+    main()
