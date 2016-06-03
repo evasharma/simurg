@@ -1,4 +1,7 @@
 import logging
+import requests
+import socket
+import time
 
 
 logging.basicConfig(level=logging.INFO)
@@ -9,9 +12,6 @@ requests_log.propagate = False
 
 
 def fetch(url, max_attempts=2, timeout=5):
-    import requests
-    import socket
-    import time
     """Downloads a URL.
     Args:
         url: The URL.
@@ -20,6 +20,8 @@ def fetch(url, max_attempts=2, timeout=5):
     Returns:
         The HTML at the URL or None if the request failed.
     """
+    if not url:
+        return None
 
     attempts = 0
 
