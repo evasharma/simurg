@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import logging
 from redis_client import get_redis_client
-import scrapper
 from news_builder import build_news
 from selector_finder import el_to_css_selector
 import scrapper
