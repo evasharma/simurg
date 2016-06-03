@@ -8,6 +8,7 @@ RUN conda install -y \
   beautifulsoup4==4.4.1
 
 RUN pip install redis
+RUN pip install unidecode
 
 WORKDIR /var/www
 ADD . .
