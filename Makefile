@@ -14,7 +14,7 @@ start: stop
 	docker run -d -v $(shell pwd):/var/www --name=$(name) $(registry)/$(name)
 
 start_redis: stop_redis
-	docker run --name redis -v $(shell pwd) /redis:/data -d redis redis-server --appendonly yes
+	docker run --name redis -v $(shell pwd)/redis:/data -d redis redis-server --appendonly yes
 
 stop_redis:
 	docker rm -f redis || true
