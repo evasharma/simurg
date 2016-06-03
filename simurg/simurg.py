@@ -27,7 +27,7 @@ def find_headline_element(soup, headline):
 
 def append_html(news):
     if not redis.exists(news['url']):
-        news['html'] = fetch(news['url'])
+        news['html'] = fetch(news['wayback_url'])
     return news
 
 
@@ -35,7 +35,7 @@ def append_selector(news):
     soup = BeautifulSoup(news['html'], 'html.parser')
     headline_el = find_headline_element(soup, news['headline'])
     if headline_el:
-        news['selector'] = el_to_css_selector(soup, headline_el)
+        news['headline_selector'] = el_to_css_selector(soup, headline_el)
     return news
 
 
@@ -59,8 +59,8 @@ def main():
                 append_selector(news)
                 if is_valid(news, field='selector'):
                     redis.hset(news['url'], 'url', news['url'])
-                    redis.hset(news['url'], 'selector', news['selector'])
-                    redis.hset(news['url'], 'way_url', news['wayback_url'])
+                    redis.hset(news['url'], 'selector', news['headline_selector'])
+                    redis.hset(news['url'], 'wayback_url', news['wayback_url'])
 
 
 if __name__ == "__main__":
