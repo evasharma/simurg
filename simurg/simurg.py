@@ -17,6 +17,7 @@ requests_log.propagate = False
 
 redis = get_redis_client()
 
+
 def find_headline_element(soup, headline):
     elems = soup(text=re.compile(re.escape(headline)))
     el = elems[0].parent if len(elems) > 0 else None
@@ -24,10 +25,12 @@ def find_headline_element(soup, headline):
         return el
     return None
 
+
 def append_html(news):
     if not redis.exists(news['url']):
         news['html'] = fetch(news['url'])
     return news
+
 
 def append_selector(news):
     soup = BeautifulSoup(news['html'], 'html.parser')
@@ -35,6 +38,7 @@ def append_selector(news):
     if headline_el:
         news['selector'] = el_to_css_selector(soup, headline_el)
     return news
+
 
 def is_valid(news, field=None):
     try:

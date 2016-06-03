@@ -26,8 +26,10 @@ def type_css_selector(el):
         return '{}'.format(el.name)
     return None
 
+
 def unique(soup, css_selector):
-    return len(list(soup.select(css_selector)))==1
+    return len(list(soup.select(css_selector))) == 1
+
 
 def valid(soup, css_selector):
     try:
@@ -35,6 +37,7 @@ def valid(soup, css_selector):
         return True
     except:
         return False
+
 
 def match(soup, css_selector, el):
     return soup.select(css_selector)[0] == el

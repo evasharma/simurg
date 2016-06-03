@@ -18,13 +18,14 @@ def get_top_story_links(base_url, selector=TOP_STORY_LINK_SELECTOR):
     links = [urljoin(base_url, href) for href in hrefs]
     return links
 
+
 def get_news_elements(soup):
     return soup.select(NEWS_ELEMENT_SELECTOR)
+
 
 def get_news_link(news_element):
     return news_element.select(NEWS_LINK_SELECTOR)[0]
 
+
 def get_news_headline(news_element):
     return news_element.select(HEADLINE_SELECTOR)[0]
-
-
