@@ -28,12 +28,12 @@ def get_wayback_url(url):
                                  allow_redirects=False)
 
         if entry_req.status_code != requests.codes.ok:
-            return get_wayback_url(url)
+            return None
 
         entry = entry_req.json()
 
         if 'closest' not in entry['archived_snapshots']:
-            return get_wayback_url(url)
+            return None
 
         wayback_url = entry['archived_snapshots']['closest']['url']
         wayback_url = wayback_pattern.sub(r'web/\g<1>id_/', wayback_url, 1)

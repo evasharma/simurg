@@ -59,7 +59,9 @@ def main():
             if is_valid(news, field='html'):
                 append_selector(news)
                 if is_valid(news, field='selector'):
-                    redis.set(news['url'], news['selector'])
+                    redis.hset(news['url'], 'url', news['url'])
+                    redis.hset(news['url'], 'selector', news['selector'])
+                    redis.hset(news['url'], 'way_url', news['wayback_url'])
 
 
 if __name__ == "__main__":
