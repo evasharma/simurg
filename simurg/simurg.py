@@ -6,6 +6,7 @@ import scrapper
 from fetcher import fetch
 from bs4 import BeautifulSoup
 import re
+from unidecode import unidecode
 
 
 redis = get_redis_client()
@@ -17,7 +18,7 @@ def find_headline_element(soup, headline):
     if el and len(el.text.strip()) > 0:
         logging.debug('found headline element on the page')
         return el
-    logging.warning('headline "{}" could not be found'.format(headline))
+    logging.debug('headline "{}" could not be found'.format(unidecode(headline)))
     return None
 
 
@@ -36,7 +37,7 @@ def append_selector(news):
         news['headline_selector'] = el_to_css_selector(soup, headline_el)
         logging.debug('found selector: {}'.format(news['headline_selector']))
         return news
-    logging.warning('css selector could not be found!')
+    logging.debug('css selector could not be found!')
     return news
 
 

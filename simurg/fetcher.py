@@ -39,5 +39,5 @@ def fetch(url, max_attempts=2, timeout=5):
 
         time.sleep(2)
         attempts += 1
-    logging.warning('fetching url fail: {}'.format(url))
+    logging.debug('fetching url fail: {}'.format(url))
     return None

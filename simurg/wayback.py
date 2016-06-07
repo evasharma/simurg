@@ -29,13 +29,13 @@ def get_wayback_url(url):
                                  allow_redirects=False)
 
         if entry_req.status_code != requests.codes.ok:
-            logging.warning('failed retrieving url for: {}'.format(url))
+            logging.debug('failed retrieving url for: {}'.format(url))
             return None
 
         entry = entry_req.json()
 
         if 'closest' not in entry['archived_snapshots']:
-            logging.warning('failed retrieving url for: {}'.format(url))
+            logging.debug('failed retrieving url for: {}'.format(url))
             return None
 
         wayback_url = entry['archived_snapshots']['closest']['url']
@@ -45,8 +45,8 @@ def get_wayback_url(url):
         return wayback_url
 
     except requests.exceptions.ConnectionError:
-        logging.warning('failed retrieving url for: {}'.format(url))
+        logging.debug('failed retrieving url for: {}'.format(url))
         return None
 
-    logging.warning('failed retrieving url for: {}'.format(url))
+    logging.debug('failed retrieving url for: {}'.format(url))
     return None
