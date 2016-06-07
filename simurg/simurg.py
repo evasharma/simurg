@@ -1,5 +1,4 @@
 import logging
-from redis_client import get_redis_client
 from news_builder import build_news
 from selector_finder import el_to_css_selector
 import scrapper
@@ -7,9 +6,10 @@ from fetcher import fetch
 from bs4 import BeautifulSoup
 import re
 from unidecode import unidecode
+from redis_client import RedisClient
 
 
-redis = get_redis_client()
+redis_client = RedisClient()
 
 
 def find_headline_element(soup, headline):
@@ -23,21 +23,23 @@ def find_headline_element(soup, headline):
 
 
 def append_html(news):
-    if not redis.exists(news['url']):
-        news['html'] = fetch(news['wayback_url'])
-        return news
+    if is_valid(news, field='wayback_url'):
+        if not redis_client.exists(news['url']):
+            news['html'] = fetch(news['wayback_url'])
+            return news
     logging.info('Skipping duplicate url: {}'.format(news['url']))
     return news
 
 
 def append_selector(news):
-    soup = BeautifulSoup(news['html'], 'html.parser')
-    headline_el = find_headline_element(soup, news['headline'])
-    if headline_el:
-        news['headline_selector'] = el_to_css_selector(soup, headline_el)
-        logging.debug('found selector: {}'.format(news['headline_selector']))
-        return news
-    logging.debug('css selector could not be found!')
+    if is_valid(news, field='html'):
+        soup = BeautifulSoup(news['html'], 'html.parser')
+        headline_el = find_headline_element(soup, news['headline'])
+        if headline_el:
+            news['headline_selector'] = el_to_css_selector(soup, headline_el)
+            logging.debug('found selector: {}'.format(news['headline_selector']))
+            return news
+        logging.debug('css selector could not be found!')
     return news
 
 
@@ -71,17 +73,10 @@ def get_base_url(lang='de'):
 
 def create_corpus(lang='de'):
     base_url = get_base_url(lang=lang)
-    top_story_links = scrapper.get_top_story_links(base_url)
-    for top_story_link in top_story_links:
+    story_urls = scrapper.get_story_links(base_url)
+    for top_story_link in story_urls:
         for news in build_news(top_story_link, base_url):
-            if is_valid(news, field='wayback_url'):
-                news = append_html(news)
-                if is_valid(news, field='html'):
-                    append_selector(news)
-                    if is_valid(news, field='headline_selector'):
-                        logging.info('added url: {}'.format(news['url']))
-                        redis.hset(news['url'], 'url', news['url'])
-                        redis.hset(news['url'], 'selector',
-                                   news['headline_selector'])
-                        redis.hset(news['url'], 'wayback_url',
-                                   news['wayback_url'])
+            news = append_html(news)
+            append_selector(news)
+            if is_valid(news, field='headline_selector'):
+                redis_client.insert(news)

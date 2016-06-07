@@ -10,7 +10,7 @@ NEWS_LINK_SELECTOR = 'h2.esc-lead-article-title a'
 HEADLINE_SELECTOR = 'span.titletext'
 
 
-def get_top_story_links(base_url, selector=TOP_STORY_LINK_SELECTOR):
+def get_story_links(base_url, selector=TOP_STORY_LINK_SELECTOR):
     response = urllib2.urlopen(base_url)
     html = response.read()
     soup = BeautifulSoup(html, 'html.parser')
