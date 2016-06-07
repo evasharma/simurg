@@ -18,7 +18,7 @@ def find_headline_element(soup, headline):
     if el and len(el.text.strip()) > 0:
         logging.debug('found headline element on the page')
         return el
-    logging.debug('headline "{}" could not be found'.format(unidecode(headline)))
+    logging.debug('headline "{}" not found'.format(unidecode(headline)))
     return None
 
 
