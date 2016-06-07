@@ -17,7 +17,7 @@ def find_headline_element(soup, headline):
     if el and len(el.text.strip()) > 0:
         logging.debug('found headline element on the page')
         return el
-    logging.warninig('headline was: {} but it could not be found'.format(headline))
+    logging.warning('headline "{}" could not be found'.format(headline))
     return None
 
 
@@ -66,6 +66,7 @@ def get_base_url(lang='de'):
         return 'https://news.google.de/'
     else:
         raise ValueError('unsupported language {}'.format(lang))
+
 
 def create_corpus(lang='de'):
     base_url = get_base_url(lang=lang)
