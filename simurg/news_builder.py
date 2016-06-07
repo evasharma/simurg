@@ -4,6 +4,7 @@ from fetcher import fetch
 import scrapper
 import uuid
 
+
 def build_news(url, base_url):
     """Constructs the first version of a news that hat to be completed later.
     A news consists of the following fields:

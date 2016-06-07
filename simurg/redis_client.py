@@ -5,9 +5,10 @@ import os
 
 class RedisClient():
     def __init__(self):
-        self.redis = redis.StrictRedis(host=os.environ['DB_PORT_6379_TCP_ADDR'],
-                                  port=os.environ['DB_PORT_6379_TCP_PORT'],
-                                  db=0)
+        self.redis = redis.StrictRedis(
+            host=os.environ['DB_PORT_6379_TCP_ADDR'],
+            port=os.environ['DB_PORT_6379_TCP_PORT'],
+            db=0)
 
     def insert(self, news):
         """Insert a news object into database

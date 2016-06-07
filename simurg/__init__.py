@@ -1,6 +1,6 @@
 from logstash_formatter import LogstashFormatterV2
-import logging
 from simurg import create_template_corpus
+import logging
 
 
 def config_logger(log_level=logging.INFO):

@@ -1,11 +1,11 @@
-import logging
 from selector_finder import find_selector
-from fetcher import fetch
-from bs4 import BeautifulSoup
-import re
-from unidecode import unidecode
 from redis_client import RedisClient
+from unidecode import unidecode
+from bs4 import BeautifulSoup
+from fetcher import fetch
 from util import is_valid
+import logging
+import re
 
 
 redis_client = RedisClient()
@@ -80,5 +80,3 @@ def get_base_url(lang='de'):
         return 'https://news.google.de/'
     else:
         raise ValueError('unsupported language {}'.format(lang))
-
-

@@ -1,10 +1,11 @@
 from template import get_base_url, append_html, append_headline_selector
-from news_builder import build_news
 from urlparse import urlparse, parse_qs
+from news_builder import build_news
 from util import is_valid
 import scrapper
 import template
 import logging
+
 
 def create_template_corpus(lang='de'):
     """Creates a template corpus where for each news url, the headline css
