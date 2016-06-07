@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import logging
 from redis_client import get_redis_client
 from news_builder import build_news
@@ -54,21 +53,22 @@ def is_valid(news, field=None):
     return False
 
 
-def main():
-    import logging
-    from logstash_formatter import LogstashFormatterV2
+def get_base_url(lang='de'):
+    """ Return the google news url for a specific language
 
-    logger = logging.getLogger()
-    requests_log = logging.getLogger("requests")
-    requests_log.addHandler(logging.NullHandler())
-    requests_log.propagate = False
-    handler = logging.StreamHandler()
-    formatter = LogstashFormatterV2()
+    # Arguments
+        lang: required language for google news
+    # Returns
+        url: corresponding google news url for the given language
+    """
 
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(logging.INFO)
-    base_url = 'https://news.google.com/'
+    if lang == 'de':
+        return 'https://news.google.de/'
+    else:
+        raise ValueError('unsupported language {}'.format(lang))
+
+def create_corpus(lang='de'):
+    base_url = get_base_url(lang=lang)
     top_story_links = scrapper.get_top_story_links(base_url)
     for top_story_link in top_story_links:
         for news in build_news(top_story_link, base_url):
@@ -83,7 +83,3 @@ def main():
                                    news['headline_selector'])
                         redis.hset(news['url'], 'wayback_url',
                                    news['wayback_url'])
-
-
-if __name__ == "__main__":
-    main()
