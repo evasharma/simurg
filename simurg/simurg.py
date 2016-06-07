@@ -59,11 +59,15 @@ def main():
     from logstash_formatter import LogstashFormatterV2
 
     logger = logging.getLogger()
+    requests_log = logging.getLogger("requests")
+    requests_log.addHandler(logging.NullHandler())
+    requests_log.propagate = False
     handler = logging.StreamHandler()
     formatter = LogstashFormatterV2()
 
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
     base_url = 'https://news.google.com/'
     top_story_links = scrapper.get_top_story_links(base_url)
     for top_story_link in top_story_links:
