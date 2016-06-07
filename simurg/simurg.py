@@ -73,7 +73,7 @@ def get_base_url(lang='de'):
 
 def create_corpus(lang='de'):
     base_url = get_base_url(lang=lang)
-    story_urls = scrapper.get_story_links(base_url)
+    story_urls = scrapper.get_story_urls(base_url)
     for top_story_link in story_urls:
         for news in build_news(top_story_link, base_url):
             news = append_html(news)
