@@ -29,24 +29,24 @@ def get_wayback_url(url):
                                  allow_redirects=False)
 
         if entry_req.status_code != requests.codes.ok:
-            logging.info('failed retrieving wayback url for: {}'.format(url))
+            logging.warning('failed retrieving wayback url for: {}'.format(url))
             return None
 
         entry = entry_req.json()
 
         if 'closest' not in entry['archived_snapshots']:
-            logging.info('failed retrieving wayback url for: {}'.format(url))
+            logging.warning('failed retrieving wayback url for: {}'.format(url))
             return None
 
         wayback_url = entry['archived_snapshots']['closest']['url']
         wayback_url = wayback_pattern.sub(r'web/\g<1>id_/', wayback_url, 1)
-        logging.info('retrieved the wayback url for: {}'.format(url))
+        logging.debug('retrieved the wayback url for: {}'.format(url))
 
         return wayback_url
 
     except requests.exceptions.ConnectionError:
-        logging.info('failed retrieving the wayback url for: {}'.format(url))
+        logging.warning('failed retrieving the wayback url for: {}'.format(url))
         return None
 
-    logging.info('failed retrieving the wayback url for: {}'.format(url))
+    logging.warning('failed retrieving the wayback url for: {}'.format(url))
     return None

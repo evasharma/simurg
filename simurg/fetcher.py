@@ -25,7 +25,7 @@ def fetch(url, max_attempts=2, timeout=5):
 
             if req.status_code == requests.codes.ok:
                 content = req.text
-                logging.info('fetched url: {}'.format(url))
+                logging.debug('fetched url: {}'.format(url))
                 return content
             elif (req.status_code in [301, 302, 404, 503] and
                   attempts == max_attempts - 1):
@@ -39,5 +39,5 @@ def fetch(url, max_attempts=2, timeout=5):
 
         time.sleep(2)
         attempts += 1
-    logging.info('fetching url fail: {}'.format(url))
+    logging.warning('fetching url fail: {}'.format(url))
     return None

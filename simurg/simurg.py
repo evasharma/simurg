@@ -15,9 +15,9 @@ def find_headline_element(soup, headline):
     elems = soup(text=re.compile(re.escape(headline[:-4])))
     el = elems[0].parent if len(elems) > 0 else None
     if el and len(el.text.strip()) > 0:
-        logging.info('found headline element on the page')
+        logging.debug('found headline element on the page')
         return el
-    logging.info('headline was: {} but it could not be found'.format(headline))
+    logging.warninig('headline was: {} but it could not be found'.format(headline))
     return None
 
 
@@ -34,9 +34,9 @@ def append_selector(news):
     headline_el = find_headline_element(soup, news['headline'])
     if headline_el:
         news['headline_selector'] = el_to_css_selector(soup, headline_el)
-        logging.info('found selector: {}'.format(news['headline_selector']))
+        logging.debug('found selector: {}'.format(news['headline_selector']))
         return news
-    logging.info('css selector could not be found!')
+    logging.warning('css selector could not be found!')
     return news
 
 
@@ -44,12 +44,12 @@ def is_valid(news, field=None):
     try:
         news[field]
     except:
-        logging.info('field {} is not valid'.format(field))
+        logging.debug('field {} is not valid'.format(field))
         return False
     if news[field]:
-        logging.info('field {} is  valid'.format(field))
+        logging.debug('field {} is  valid'.format(field))
         return True
-    logging.info('field {} is not valid'.format(field))
+    logging.debug('field {} is not valid'.format(field))
     return False
 
 
