@@ -1,13 +1,22 @@
+from wayback import get_wayback_url
 from bs4 import BeautifulSoup
-import uuid
 from fetcher import fetch
 import scrapper
-from wayback import get_wayback_url
+import uuid
 
+def build_news(url, base_url):
+    """Constructs the first version of a news that hat to be completed later.
+    A news consists of the following fields:
+        id, headline, url, wayback_url
 
-def build_news(top_story_link, base_url):
-    top_story_html = fetch(top_story_link)
-    soup = BeautifulSoup(top_story_html, 'html.parser')
+    # Arguments
+        url: top story page that contains the news
+        base_url: base google news page
+
+    # Returns
+        news: a news dictionary objects
+    """
+    soup = BeautifulSoup(fetch(url), 'html.parser')
     news_elements = scrapper.get_news_elements(soup)
     for news_el in news_elements:
         news = {}
