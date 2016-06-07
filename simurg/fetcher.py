@@ -4,13 +4,6 @@ import socket
 import time
 
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-requests_log = logging.getLogger("requests")
-requests_log.addHandler(logging.NullHandler())
-requests_log.propagate = False
-
-
 def fetch(url, max_attempts=2, timeout=5):
     """Downloads a URL.
     Args:
@@ -32,7 +25,7 @@ def fetch(url, max_attempts=2, timeout=5):
 
             if req.status_code == requests.codes.ok:
                 content = req.text
-                logger.info('fetched url: {}'.format(url))
+                logging.info('fetched url: {}'.format(url))
                 return content
             elif (req.status_code in [301, 302, 404, 503] and
                   attempts == max_attempts - 1):
@@ -46,5 +39,5 @@ def fetch(url, max_attempts=2, timeout=5):
 
         time.sleep(2)
         attempts += 1
-    logger.info('fetching url fail: {}'.format(url))
+    logging.info('fetching url fail: {}'.format(url))
     return None
