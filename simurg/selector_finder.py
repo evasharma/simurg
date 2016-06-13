@@ -28,7 +28,7 @@ def id_css_selector(el):
         selector: css selector of the form el#id
     """
     css_id = el.get('id', None)
-    if css_id:
+    if css_id and len(css_id.strip()) > 0:
         return '{}#{}'.format(el.name, css_id[0])
     return None
 
@@ -43,7 +43,7 @@ def class_css_selector(el):
         selector: css selector of the form el.class
     """
     css_class = el.get('class', None)
-    if css_class:
+    if css_class and len(css_class.strip()) > 0:
         return '{}.{}'.format(el.name, css_class[0])
     return None
 

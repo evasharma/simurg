@@ -32,3 +32,11 @@ class RedisClient():
             exists: True if the key exists in the database
         """
         return self.redis.exists(key)
+
+    def keys(self):
+        """Returns all keys in the database
+
+        # Returns
+            keys: all keys in the database
+        """
+        return self.redis.keys()
