@@ -17,9 +17,10 @@ class RedisClient():
             news: news object to be inserted
         """
         key = news['url']
+        self.redis.hset(key, 'id', news['id'])
         self.redis.hset(key, 'url', news['url'])
-        self.redis.hset(key, 'headline_selector', news['headline_selector'])
         self.redis.hset(key, 'wayback_url', news['wayback_url'])
+        self.redis.hset(key, 'headline_selector', news['headline_selector'])
         logging.info('inserted news with url: {}'.format(news['url']))
 
     def exists(self, key):
@@ -40,3 +41,14 @@ class RedisClient():
             keys: all keys in the database
         """
         return self.redis.keys()
+
+    def get(self, key):
+        """Returns the values of a given keys as dictionary
+
+        # Arguments
+            key: key to be retrieved
+
+        # Returns
+            dictionary: value of the keys in form of a dictionary
+        """
+        return self.redis.hgetall(key)
