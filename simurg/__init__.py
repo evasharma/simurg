@@ -1,5 +1,6 @@
 from logstash_formatter import LogstashFormatterV2
 from simurg import create_template_corpus
+from simurg import populate_template_corpus
 import logging
 
 

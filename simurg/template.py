@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from fetcher import fetch
 from util import is_valid
 import logging
+import time
 import re
 
 
@@ -95,3 +96,23 @@ def get_base_url(lang='de'):
         return 'https://news.google.de/'
     else:
         raise ValueError('unsupported language {}'.format(lang))
+
+
+def populate(lang='de'):
+    keys = redis_client.keys()
+    for key in keys:
+        value = redis_client.get(key)
+        html = fetch(value['wayback_url'])
+        time.sleep(1)
+        soup = BeautifulSoup(html, 'html.parser')
+        headline_elems = soup.select(value['headline_selector'], None)
+        if headline_elems:
+            headline = headline_elems[0].text.strip()
+        else:
+            headline = None
+        news = {}
+        news['id'] = value['id']
+        news['headline'] = headline
+        news['wayback_url'] = value['wayback_url']
+        news['url'] = value['url']
+        yield news

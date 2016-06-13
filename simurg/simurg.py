@@ -34,3 +34,13 @@ def create_template_corpus(lang='de'):
                 template.redis_client.insert(news)
     threading.Timer(60, create_template_corpus).start()
     create_template_corpus(lang)
+
+
+def populate_template_corpus(lang='de'):
+    for news in template.populate():
+        import json
+        import io
+        base = 'docs/' + lang + '/'
+        with io.open(base + news['id'] + '.json', 'w', encoding='utf8') as json_file:
+            data = json.dumps(news, ensure_ascii=False, encoding='utf8')
+            json_file.write(unicode(data))
