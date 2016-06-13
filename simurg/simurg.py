@@ -9,6 +9,7 @@ import scrapper
 import template
 import logging
 import sys
+import threading
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -31,3 +32,5 @@ def create_template_corpus(lang='de'):
             news = append_headline_selector(news)
             if is_valid(news, field='headline_selector'):
                 template.redis_client.insert(news)
+    threading.Timer(60, create_template_corpus).start()
+    create_template_corpus(lang)
