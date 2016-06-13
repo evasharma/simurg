@@ -10,6 +10,15 @@ import re
 
 redis_client = RedisClient()
 
+def _clean_soup(soup):
+    """Removes some elements that may negatively affect the
+    quality of headline extraction
+
+    # Arguments
+        soup: parsed html document
+    """
+    exclude_tags = ['style', 'script', '[document]', 'head', 'title']
+    [s.extract() for s in soup(exclude_tags)]
 
 def find_headline_element(soup, headline):
     """Finds the headline element on a page based on a headline hint.
@@ -21,12 +30,14 @@ def find_headline_element(soup, headline):
     # Returns
         el: headline element (None if not found)
     """
-    # Hint sometimes containe "..." at the end. We eliminate it.
+    # Hint sometimes contains "..." at the end. We eliminate it.
+    logging.info('Trying to find headline "{}"'.format(unidecode(headline)))
     elems = soup(text=re.compile(re.escape(headline[:-4])))
     el = elems[0].parent if len(elems) > 0 else None
     if el and len(el.text.strip()) > 0:
+        logging.info('Found: {}'.format(unidecode(el)))
         return el
-    logging.debug('Headline "{}" not found'.format(unidecode(headline)))
+    logging.info('Headline "{}" not found'.format(unidecode(headline)))
     return None
 
 
