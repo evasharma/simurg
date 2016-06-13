@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from template import get_base_url, append_html, append_headline_selector
 from urlparse import urlparse, parse_qs
 from news_builder import build_news
@@ -5,6 +8,9 @@ from util import is_valid
 import scrapper
 import template
 import logging
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 
 def create_template_corpus(lang='de'):
@@ -18,7 +24,8 @@ def create_template_corpus(lang='de'):
     story_urls = scrapper.get_story_urls(base_url)
     for url in story_urls:
         story = parse_qs(urlparse(url).query, keep_blank_values=True)['q']
-        logging.info('Processing story "{}"'.format(story[0]))
+        story = unicode(story[0])
+        logging.info('Processing story "{}"'.format((story.decode('utf-8'))))
         for news in build_news(url, base_url):
             news = append_html(news)
             news = append_headline_selector(news)
