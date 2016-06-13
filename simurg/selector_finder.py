@@ -29,7 +29,7 @@ def id_css_selector(el):
     """
     css_id = el.get('id', None)
     if css_id:
-        return '{}#{}'.format(el.name, css_id)
+        return '{}#{}'.format(el.name, css_id[0])
     return None
 
 
@@ -44,7 +44,7 @@ def class_css_selector(el):
     """
     css_class = el.get('class', None)
     if css_class:
-        return '{}.{}'.format(el.name, css_class)
+        return '{}.{}'.format(el.name, css_class[0])
     return None
 
 

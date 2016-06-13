@@ -10,7 +10,8 @@ import re
 
 redis_client = RedisClient()
 
-def _clean_soup(soup):
+
+def clean_soup(soup):
     """Removes some elements that may negatively affect the
     quality of headline extraction
 
@@ -19,6 +20,7 @@ def _clean_soup(soup):
     """
     exclude_tags = ['style', 'script', '[document]', 'head', 'title']
     [s.extract() for s in soup(exclude_tags)]
+
 
 def find_headline_element(soup, headline):
     """Finds the headline element on a page based on a headline hint.
@@ -30,14 +32,16 @@ def find_headline_element(soup, headline):
     # Returns
         el: headline element (None if not found)
     """
-    # Hint sometimes contains "..." at the end. We eliminate it.
-    logging.info('Trying to find headline "{}"'.format(unidecode(headline)))
+    clean_soup(soup)
+    # headline sometimes contains "..." at the end. We eliminate it.
     elems = soup(text=re.compile(re.escape(headline[:-4])))
-    el = elems[0].parent if len(elems) > 0 else None
-    if el and len(el.text.strip()) > 0:
-        logging.info('Found: {}'.format(unidecode(el)))
-        return el
-    logging.info('Headline "{}" not found'.format(unidecode(headline)))
+    d = {}
+    for el in elems:
+        d[el.parent] = el.parent.text.strip()
+    headline_elems = sorted(d, key=lambda k: len(d[k]))
+    if len(headline_elems) > 0:
+        return headline_elems[0]
+    logging.debug('Headline "{}" not found'.format(unidecode(headline)))
     return None
 
 
@@ -55,7 +59,7 @@ def append_html(news):
         if not redis_client.exists(news['url']):
             news['html'] = fetch(news['wayback_url'])
             return news
-    logging.info('Skipping duplicate url: {}'.format(news['url']))
+        logging.info('Skipping duplicate url: {}'.format(news['url']))
     return news
 
 
