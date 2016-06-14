@@ -4,7 +4,7 @@ from simurg import populate_template_corpus
 import logging
 
 
-def config_logger(log_level=logging.DEBUG):
+def config_logger(log_level=logging.INFO):
     """Configures the logger
     """
     logger = logging.getLogger()
