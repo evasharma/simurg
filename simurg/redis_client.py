@@ -10,7 +10,7 @@ class RedisClient():
             host=os.environ['DB_PORT_6379_TCP_ADDR'],
             port=os.environ['DB_PORT_6379_TCP_PORT'],
             db=config.REDIS_DBS[lang])
-        self.lang=lang
+        self.lang = lang
 
     def insert(self, news):
         """Insert a news object into database
