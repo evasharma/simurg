@@ -1,4 +1,5 @@
 from wayback import get_wayback_url
+from datetime import datetime
 from bs4 import BeautifulSoup
 from fetcher import fetch
 import scrapper
@@ -25,4 +26,5 @@ def build_news(url, base_url):
         news['headline'] = scrapper.get_news_headline(news_el).text
         news['url'] = scrapper.get_news_link(news_el).get('href')
         news['wayback_url'] = get_wayback_url(news['url'])
+        news['timestamp'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         yield news

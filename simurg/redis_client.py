@@ -21,6 +21,7 @@ class RedisClient():
         self.redis.hset(key, 'url', news['url'])
         self.redis.hset(key, 'wayback_url', news['wayback_url'])
         self.redis.hset(key, 'headline_selector', news['headline_selector'])
+        self.redis.hset(key, 'timestamp', news['timestamp'])
         logging.info('inserted news with url: {}'.format(news['url']))
 
     def exists(self, key):

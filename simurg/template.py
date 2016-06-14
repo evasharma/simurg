@@ -120,9 +120,10 @@ def populate(lang='de'):
             headline = None
         news = OrderedDict()
         news['id'] = value['id']
+        news['timestamp'] = value['timestamp']
         news['url'] = value['url']
-        news['headline'] = headline
         news['wayback_url'] = value['wayback_url']
+        news['headline'] = headline
         news['body'] = content_extractor.analyze(html)
         news['html'] = html
         yield news
