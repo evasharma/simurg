@@ -41,6 +41,10 @@ def populate_template_corpus(lang='de'):
         import json
         import io
         base = 'docs/' + lang + '/'
-        with io.open(base + news['id'] + '.json', 'w', encoding='utf8') as json_file:
-            data = json.dumps(news, ensure_ascii=False, encoding='utf8')
+        filename = base + news['id'] + '.json'
+        with io.open(filename, 'w', encoding='utf8') as json_file:
+            data = json.dumps(news,
+                              ensure_ascii=False,
+                              encoding='utf8',
+                              indent=4)
             json_file.write(unicode(data))

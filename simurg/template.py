@@ -112,7 +112,7 @@ def populate(lang='de'):
             headline = None
         news = {}
         news['id'] = value['id']
+        news['url'] = value['url']
         news['headline'] = headline
         news['wayback_url'] = value['wayback_url']
-        news['url'] = value['url']
         yield news
