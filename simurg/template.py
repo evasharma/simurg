@@ -93,9 +93,9 @@ def get_base_url(lang='de'):
         url: corresponding google news url for the given language
     """
     if lang == 'de':
-        return 'https://news.google.de/'
+        return 'http://news.google.com/news?ned=de'
     if lang == 'en':
-        return 'https://news.google.com/'
+        return 'http://news.google.com/news?ned=us'
     else:
         raise ValueError('unsupported language {}'.format(lang))
 
@@ -126,6 +126,7 @@ def populate(redis_client):
         news = OrderedDict()
         news['id'] = value['id']
         news['timestamp'] = value['timestamp']
+        news['lang'] = redis_client.lang
         news['url'] = value['url']
         news['wayback_url'] = value['wayback_url']
         news['headline'] = headline
