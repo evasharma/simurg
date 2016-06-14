@@ -41,7 +41,8 @@ def get_wayback_url(url):
 
         wayback_url = entry['archived_snapshots']['closest']['url']
         wayback_url = wayback_pattern.sub(r'web/\g<1>id_/', wayback_url, 1)
-        logging.debug('Success in retrieving the wayback url for: {}'.format(url))
+        logging.debug('Success in retrieving the wayback url for: {}'.
+                      format(url))
 
         return wayback_url
 
