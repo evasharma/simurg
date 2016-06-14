@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from fetcher import fetch
 from util import is_valid
 import logging
+import os.path
 import time
 import re
 
@@ -101,8 +102,14 @@ def get_base_url(lang='de'):
 
 def populate(lang='de'):
     keys = redis_client.keys()
+    folder = 'docs/{}/'.format(lang)
     for key in keys:
         value = redis_client.get(key)
+        f = folder + value['id'] + '.json'
+        print(f)
+        if os.path.isfile(f):
+            logging.info('Skipping existing document: {}'.format(f))
+            continue
         html = fetch(value['wayback_url'])
         time.sleep(1)
         soup = BeautifulSoup(html, 'html.parser')
