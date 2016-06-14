@@ -56,4 +56,5 @@ def populate_template_corpus(lang='de'):
                               ensure_ascii=False,
                               encoding='utf8',
                               indent=4)
+            logging.info('Wrote document to disk: id={}'.format(news['id']))
             json_file.write(unicode(data))

@@ -2,6 +2,7 @@ from wayback import get_wayback_url
 from datetime import datetime
 from bs4 import BeautifulSoup
 from fetcher import fetch
+import logging
 import scrapper
 import uuid
 
@@ -18,7 +19,12 @@ def build_news(url, base_url):
     # Returns
         news: a news dictionary objects
     """
-    soup = BeautifulSoup(fetch(url), 'html.parser')
+    try:
+        soup = BeautifulSoup(fetch(url), 'html.parser')
+    except StandardError:
+        logging.debug('An error occured while parsing {}'.format(url))
+        yield None
+
     news_elements = scrapper.get_news_elements(soup)
     for news_el in news_elements:
         news = {}
