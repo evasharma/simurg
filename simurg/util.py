@@ -15,9 +15,7 @@ def is_valid(news, field=None):
     try:
         news[field]
     except:
-        logging.debug('field {} does not exist'.format(field))
         return False
     if news[field]:
         return True
-    logging.debug('field {} has not a value'.format(field))
     return False

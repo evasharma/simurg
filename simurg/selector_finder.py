@@ -1,4 +1,7 @@
-def find_selector(soup, el):
+import logging
+
+
+def find_selector(soup, elems):
     """Given a parsed html document, find a css selector for the given element.
 
     # Arguments
@@ -8,13 +11,17 @@ def find_selector(soup, el):
     # Returns
         selector: a css selector (or None if nothing found)
     """
-    css_selectors = [class_css_selector, id_css_selector, type_css_selector]
+    css_selectors = [class_css_selector,
+                     id_css_selector,
+                     attribute_css_selector,
+                     type_css_selector]
     for selector in css_selectors:
-        css_selector = selector(el)
-        if valid(soup, css_selector) and \
-                unique(soup, css_selector) and \
-                match(soup, css_selector, el):
-            return css_selector
+        for el in elems:
+            css_selector = selector(el)
+            if valid(soup, css_selector) and \
+                    unique(soup, css_selector) and \
+                    match(soup, css_selector, el):
+                return css_selector
     return None
 
 
@@ -45,6 +52,23 @@ def class_css_selector(el):
     css_class = el.get('class', None)
     if css_class and len(css_class[0].strip()) > 0:
         return '{}.{}'.format(el.name, css_class[0])
+    return None
+
+
+def attribute_css_selector(el, attribute='itemprop'):
+    """Tries to construct a css selector of the form el[attribute=value]
+    from the element
+
+    # Argument
+        el: an html element
+        attribute: css attribute
+
+    # Returns
+        selector: css selector of the form el.class
+    """
+    value = el.attrs.get(attribute, None)
+    if value and len(value.strip()) > 0:
+        return '{}[{}={}]'.format(el.name, attribute, value)
     return None
 
 

@@ -36,6 +36,9 @@ def create_template_corpus(lang='de'):
             news = append_headline_selector(news)
             if is_valid(news, field='headline_selector'):
                 redis_client.insert(news)
+            else:
+                logging.debug('Ignoring invalid news with url: {}'.
+                              format(news['url']))
     threading.Timer(60, create_template_corpus).start()
     create_template_corpus(lang)
 

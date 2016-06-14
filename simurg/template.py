@@ -40,7 +40,7 @@ def find_headline_element(soup, headline):
         d[el.parent] = el.parent.text.strip()
     headline_elems = sorted(d, key=lambda k: len(d[k]))
     if len(headline_elems) > 0:
-        return headline_elems[0]
+        return headline_elems
     logging.debug('Headline "{}" not found'.format(unidecode(headline)))
     return None
 
@@ -75,11 +75,14 @@ def append_headline_selector(news):
     """
     if is_valid(news, field='html'):
         soup = BeautifulSoup(news['html'], 'html.parser')
-        headline_el = find_headline_element(soup, news['headline'])
-        if headline_el:
-            news['headline_selector'] = find_selector(soup, headline_el)
+        headline_elems = find_headline_element(soup, news['headline'])
+        if headline_elems:
+            news['headline_selector'] = find_selector(soup, headline_elems)
             return news
         logging.debug('Headline css selector could not be found!')
+    else:
+        logging.debug('Fetching html page failed. url={}'.
+                      format(news['url']))
     return news
 
 
