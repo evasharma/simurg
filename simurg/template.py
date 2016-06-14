@@ -94,6 +94,8 @@ def get_base_url(lang='de'):
     """
     if lang == 'de':
         return 'https://news.google.de/'
+    if lang == 'en':
+        return 'https://news.google.com/'
     else:
         raise ValueError('unsupported language {}'.format(lang))
 
