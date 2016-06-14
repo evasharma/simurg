@@ -1,6 +1,7 @@
 from selector_finder import find_selector
 from dragnet import content_extractor
 from redis_client import RedisClient
+from collections import OrderedDict
 from unidecode import unidecode
 from bs4 import BeautifulSoup
 from fetcher import fetch
@@ -106,7 +107,6 @@ def populate(lang='de'):
     for key in keys:
         value = redis_client.get(key)
         f = folder + value['id'] + '.json'
-        print(f)
         if os.path.isfile(f):
             logging.info('Skipping existing document: {}'.format(f))
             continue
@@ -118,7 +118,7 @@ def populate(lang='de'):
             headline = headline_elems[0].text.strip()
         else:
             headline = None
-        news = {}
+        news = OrderedDict()
         news['id'] = value['id']
         news['url'] = value['url']
         news['headline'] = headline
