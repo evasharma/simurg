@@ -3,6 +3,7 @@
 
 from template import get_base_url, append_html, append_headline_selector
 from urlparse import urlparse, parse_qs
+from redis_client import RedisClient
 from news_builder import build_news
 from util import is_valid
 import threading
