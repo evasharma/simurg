@@ -1,6 +1,5 @@
 from selector_finder import find_selector
 from dragnet import content_extractor
-from redis_client import RedisClient
 from collections import OrderedDict
 from unidecode import unidecode
 from bs4 import BeautifulSoup
@@ -10,9 +9,6 @@ import logging
 import os.path
 import time
 import re
-
-
-redis_client = RedisClient()
 
 
 def clean_soup(soup):
@@ -49,7 +45,7 @@ def find_headline_element(soup, headline):
     return None
 
 
-def append_html(news):
+def append_html(news, redis_client):
     """Appends an html field to the news, only if the wayback_url is valid and
     the url does not already exist in the database.
 
@@ -88,10 +84,11 @@ def append_headline_selector(news):
 
 
 def get_base_url(lang='de'):
-    """ Return the google news url for a specific language
+    """Return the google news url for a specific language
 
     # Arguments
         lang: required language for google news
+
     # Returns
         url: corresponding google news url for the given language
     """
@@ -101,9 +98,18 @@ def get_base_url(lang='de'):
         raise ValueError('unsupported language {}'.format(lang))
 
 
-def populate(lang='de'):
+def populate(redis_client):
+    """Populates the entries in the database with fields such as headline,
+    body, html and url
+
+    # Arguments
+        lang: language of the database
+
+    # Returns
+        news: news objects populated with required fields
+    """
     keys = redis_client.keys()
-    folder = 'docs/{}/'.format(lang)
+    folder = 'docs/{}/'.format(redis_client.lang)
     for key in keys:
         value = redis_client.get(key)
         f = folder + value['id'] + '.json'
@@ -114,10 +120,7 @@ def populate(lang='de'):
         time.sleep(1)
         soup = BeautifulSoup(html, 'html.parser')
         headline_elems = soup.select(value['headline_selector'], None)
-        if headline_elems:
-            headline = headline_elems[0].text.strip()
-        else:
-            headline = None
+        headline = headline_elems[0].text.strip()
         news = OrderedDict()
         news['id'] = value['id']
         news['timestamp'] = value['timestamp']

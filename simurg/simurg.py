@@ -5,11 +5,13 @@ from template import get_base_url, append_html, append_headline_selector
 from urlparse import urlparse, parse_qs
 from news_builder import build_news
 from util import is_valid
+import threading
 import scrapper
 import template
 import logging
+import json
 import sys
-import threading
+import io
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -21,6 +23,7 @@ def create_template_corpus(lang='de'):
     # Arguments:
         lang: language of the corpus
     """
+    redis_client = RedisClient(lang=lang)
     base_url = get_base_url(lang=lang)
     story_urls = scrapper.get_story_urls(base_url)
     for url in story_urls:
@@ -28,18 +31,23 @@ def create_template_corpus(lang='de'):
         story = unicode(story[0])
         logging.info('Processing story "{}"'.format((story.decode('utf-8'))))
         for news in build_news(url, base_url):
-            news = append_html(news)
+            news = append_html(news, redis_client)
             news = append_headline_selector(news)
             if is_valid(news, field='headline_selector'):
-                template.redis_client.insert(news)
+                redis_client.insert(news)
     threading.Timer(60, create_template_corpus).start()
     create_template_corpus(lang)
 
 
 def populate_template_corpus(lang='de'):
-    for news in template.populate():
-        import json
-        import io
+    """Populates the news with required field and write them to json files.
+    For each news object a json file which has the id of news is created
+
+    # Arguments:
+        lang: language of the corpus
+    """
+    redis_client = RedisClient(lang=lang)
+    for news in template.populate(redis_client):
         base = 'docs/' + lang + '/'
         filename = base + news['id'] + '.json'
         with io.open(filename, 'w', encoding='utf8') as json_file:

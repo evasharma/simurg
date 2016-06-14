@@ -1,14 +1,16 @@
 import logging
+import config
 import redis
 import os
 
 
 class RedisClient():
-    def __init__(self):
+    def __init__(self, lang='de'):
         self.redis = redis.StrictRedis(
             host=os.environ['DB_PORT_6379_TCP_ADDR'],
             port=os.environ['DB_PORT_6379_TCP_PORT'],
-            db=0)
+            db=config.REDIS_DBS[lang])
+        self.lang=lang
 
     def insert(self, news):
         """Insert a news object into database
