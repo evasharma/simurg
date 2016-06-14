@@ -1,4 +1,5 @@
 from selector_finder import find_selector
+from dragnet import content_extractor
 from redis_client import RedisClient
 from unidecode import unidecode
 from bs4 import BeautifulSoup
@@ -115,4 +116,6 @@ def populate(lang='de'):
         news['url'] = value['url']
         news['headline'] = headline
         news['wayback_url'] = value['wayback_url']
+        news['body'] = content_extractor.analyze(html)
+        news['html'] = html
         yield news
