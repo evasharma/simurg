@@ -39,7 +39,7 @@ def create_template_corpus(lang='de'):
                     redis_client.insert(news)
                 else:
                     logging.debug('Ignoring invalid news with url: {}'.
-                                format(news['url']))
+                                  format(news['url']))
     threading.Timer(180, create_template_corpus).start()
     create_template_corpus(lang)
 
