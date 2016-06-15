@@ -31,15 +31,16 @@ def create_template_corpus(lang='de'):
         story = parse_qs(urlparse(url).query, keep_blank_values=True)['q']
         story = unicode(story[0])
         logging.info('Processing story "{}"'.format((story.decode('utf-8'))))
-        for news in build_news(url, base_url):
-            news = append_html(news, redis_client)
-            news = append_headline_selector(news)
-            if is_valid(news, field='headline_selector'):
-                redis_client.insert(news)
-            else:
-                logging.debug('Ignoring invalid news with url: {}'.
-                              format(news['url']))
-    threading.Timer(60, create_template_corpus).start()
+        for news in build_news(url):
+            if news:
+                news = append_html(news, redis_client)
+                news = append_headline_selector(news)
+                if is_valid(news, field='headline_selector'):
+                    redis_client.insert(news)
+                else:
+                    logging.debug('Ignoring invalid news with url: {}'.
+                                format(news['url']))
+    threading.Timer(180, create_template_corpus).start()
     create_template_corpus(lang)
 
 
