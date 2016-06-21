@@ -20,6 +20,6 @@ def fetch(url):
     try:
         (_, content) = h.request(url, "GET")
         return content
-    except StandardError:
+    except:
         logging.debug('Fetching url failed: {}'.format(url))
     return None
