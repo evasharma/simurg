@@ -1,10 +1,11 @@
 import logging
-import requests
-import socket
-import time
+import httplib2
 
 
-def fetch(url, max_attempts=2, timeout=5):
+h = httplib2.Http(".cache")
+
+
+def fetch(url):
     """Downloads a URL.
     Args:
         url: The URL.
@@ -16,27 +17,9 @@ def fetch(url, max_attempts=2, timeout=5):
     if not url:
         return None
 
-    attempts = 0
-
-    while attempts < max_attempts:
-        try:
-            req = requests.get(
-                url, allow_redirects=False, timeout=timeout)
-
-            if req.status_code == requests.codes.ok:
-                content = req.text
-                return content
-            elif (req.status_code in [301, 302, 404, 503] and
-                  attempts == max_attempts - 1):
-                pass
-        except requests.exceptions.ConnectionError:
-            pass
-        except requests.exceptions.Timeout:
-            pass
-        except socket.timeout:
-            pass
-
-        time.sleep(2)
-        attempts += 1
-    logging.debug('Fetching url fail: {}'.format(url))
+    try:
+        (_, content) = h.request(url, "GET")
+        return content
+    except StandardError:
+        logging.debug('Fetching url failed: {}'.format(url))
     return None
