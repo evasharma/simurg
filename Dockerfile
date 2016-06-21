@@ -14,6 +14,7 @@ RUN pip install numpy
 RUN pip install --upgrade cython
 RUN pip install lxml
 RUN pip install dragnet
+RUn pip install httplib2
 
 WORKDIR /var/www
 ADD . .
