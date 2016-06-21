@@ -56,10 +56,13 @@ def append_html(news, redis_client):
         news: news object with or without html field
     """
     if is_valid(news, field='wayback_url'):
-        if not redis_client.exists(news['url']):
-            news['html'] = fetch(news['wayback_url'])
-            return news
-        logging.info('Skipping duplicate url: {}'.format(news['url']))
+        fetch_url = news['wayback_url']
+    else:
+        fetch_url = news['url']
+    if not redis_client.exists(news['url']):
+        news['html'] = fetch(fetch_url)
+        return news
+    logging.info('Skipping duplicate url: {}'.format(news['url']))
     return news
 
 
