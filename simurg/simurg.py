@@ -10,6 +10,7 @@ import threading
 import scrapper
 import template
 import logging
+import time
 import json
 import sys
 import io
@@ -26,22 +27,23 @@ def create_template_corpus(lang='de'):
     """
     redis_client = RedisClient(lang=lang)
     base_url = get_base_url(lang=lang)
-    story_urls = scrapper.get_story_urls(base_url)
-    for url in story_urls:
-        story = parse_qs(urlparse(url).query, keep_blank_values=True)['q']
-        story = unicode(story[0])
-        logging.info('Processing story "{}"'.format((story.decode('utf-8'))))
-        for news in build_news(url):
-            if news:
-                news = append_html(news, redis_client)
-                news = append_headline_selector(news)
-                if is_valid(news, field='headline_selector'):
-                    redis_client.insert(news)
-                else:
-                    logging.debug('Ignoring invalid news with url: {}'.
-                                  format(news['url']))
-    threading.Timer(180, create_template_corpus).start()
-    create_template_corpus(lang)
+    while True:
+        story_urls = scrapper.get_story_urls(base_url)
+        for url in story_urls:
+            story = parse_qs(urlparse(url).query, keep_blank_values=True)['q']
+            story = unicode(story[0])
+            logging.info('Processing story "{}"'.
+                         format((story.decode('utf-8'))))
+            for news in build_news(url):
+                if news:
+                    news = append_html(news, redis_client)
+                    news = append_headline_selector(news)
+                    if is_valid(news, field='headline_selector'):
+                        redis_client.insert(news)
+                    else:
+                        logging.debug('Ignoring invalid news with url: {}'.
+                                      format(news['url']))
+        time.sleep(300)
 
 
 def populate_template_corpus(lang='de'):
