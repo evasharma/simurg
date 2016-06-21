@@ -34,7 +34,10 @@ def find_headline_element(soup, headline):
     """
     clean_soup(soup)
     # headline sometimes contains "..." at the end. We eliminate it.
-    elems = soup(text=re.compile(re.escape(headline[:-4])))
+    headline = headline[:-4]
+    if ':' in headline:
+        headline = headline.split(':')[1]
+    elems = soup(text=re.compile(re.escape(headline)))
     d = {}
     for el in elems:
         d[el.parent] = el.parent.text.strip()
