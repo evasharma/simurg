@@ -105,6 +105,10 @@ def get_base_url(lang='de'):
         return 'http://news.google.com/news?ned=de'
     if lang == 'en':
         return 'http://news.google.com/news?ned=us'
+    if lang == 'fr':
+        return 'https://news.google.com/news?ned=fr'
+    if lang == 'it':
+        return 'https://news.google.com/news?ned=it'
     else:
         raise ValueError('unsupported language {}'.format(lang))
 
