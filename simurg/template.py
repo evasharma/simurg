@@ -132,10 +132,8 @@ def populate(redis_client):
             logging.info('Skipping existing document: {}'.format(f))
             continue
         if value['wayback_url'] == 'None':
-            print('first')
             html = fetch(value['url'])
         else:
-            print('second')
             html = fetch(value['wayback_url'])
         time.sleep(1)
         soup = BeautifulSoup(html, 'html.parser')
