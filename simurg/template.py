@@ -131,7 +131,10 @@ def populate(redis_client):
         if os.path.isfile(f):
             logging.info('Skipping existing document: {}'.format(f))
             continue
-        html = fetch(value['wayback_url'])
+        if value['wayback_url']:
+            html = fetch(value['wayback_url'])
+        else:
+            html = fetch(value['url'])
         time.sleep(1)
         soup = BeautifulSoup(html, 'html.parser')
         headline_elems = soup.select(value['headline_selector'], None)
