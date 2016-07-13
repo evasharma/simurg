@@ -54,6 +54,8 @@ def populate_template_corpus(lang='de'):
     """
     redis_client = RedisClient(lang=lang)
     for news in template.populate(redis_client):
+        if not is_valid(news, field='headline'):
+            continue
         base = 'docs/' + lang + '/'
         filename = base + news['id'] + '.json'
         with io.open(filename, 'w', encoding='utf8') as json_file:
