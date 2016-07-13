@@ -6,7 +6,6 @@ from urlparse import urlparse, parse_qs
 from redis_client import RedisClient
 from news_builder import build_news
 from util import is_valid
-import threading
 import scrapper
 import template
 import logging
@@ -47,7 +46,7 @@ def create_template_corpus(lang='de'):
 
 
 def populate_template_corpus(lang='de'):
-    """Populates the news with required field and write them to json files.
+    """Populates the news with required fields and write them to json files.
     For each news object a json file which has the id of news is created
 
     # Arguments:
