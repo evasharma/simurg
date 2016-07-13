@@ -138,7 +138,10 @@ def populate(redis_client):
         time.sleep(1)
         soup = BeautifulSoup(html, 'html.parser')
         headline_elems = soup.select(value['headline_selector'], None)
-        headline = headline_elems[0].text.strip()
+        if len(headline_elems) > 0:
+            headline = headline_elems[0].text.strip()
+        else:
+            continue
         news = OrderedDict()
         news['id'] = value['id']
         news['timestamp'] = value['timestamp']
