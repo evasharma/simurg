@@ -136,11 +136,16 @@ def populate(redis_client):
         else:
             html = fetch(value['wayback_url'])
         time.sleep(1)
-        soup = BeautifulSoup(html, 'html.parser')
+        if html:
+            soup = BeautifulSoup(html, 'html.parser')
+        else:
+            continue
         headline_elems = soup.select(value['headline_selector'], None)
         if len(headline_elems) > 0:
             headline = headline_elems[0].text.strip()
         else:
+            logging.debug('Headline can not be refound: url={}, selector={}'
+                          .format(value['url'], value['headline_selector']))
             continue
         news = OrderedDict()
         news['id'] = value['id']
