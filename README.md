@@ -12,7 +12,7 @@ Simurg is an open source framework to create an extensable multilingual corpus f
 Creating the corpus consists of two phases:
 - Constructing the template corpus: The template corpus is the sharable part of the Simurg corpus.
 
-<img src="https://github.com/pasmod/simurg/blob/master/images/architecture.jpg" width="250">
+<img src="https://github.com/pasmod/simurg/blob/master/images/architecture.jpg" width="300", align="middle">
 - Populating the template corpus: In this phase the template corpus will be populated with all the required information and the result will be a collection of JSON documents.
 
 ## Dependencies
@@ -29,11 +29,8 @@ To create the template corpus use the following commands:
 
 ```make run```: to run the container
 
-In the container run:
+In the container run ```python``` and then enter the following two python commands:
 
-```python```
-
-Then enter the following two python commands:
 ```python
 import simurg
 simurg.create_template_corpus(lang='de')
@@ -44,11 +41,7 @@ Run the following command to create the final corpus:
 
 ```make run```: to run the container
 
-In the container run:
-
-```python```
-
-Then enter the following two python commands:
+In the container run ```python``` and then enter the following two python commands:
 ```python
 import simurg
 simurg.populate_template_corpus(lang='de')
