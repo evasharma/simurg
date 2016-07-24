@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/pasmod/simurg.svg?branch=master)](https://travis-ci.org/pasmod/simurg)
 # Simurg
 
 A tool to create extendable multilingual corpora for abstractive text summarization (and other applications).
