@@ -11,6 +11,6 @@ Simurg is an open source framework to create an extensable multilingual corpus f
 ## Architecture
 Creating the corpus consists of two phases:
 - Constructing the template corpus
-![Image of Yaktocat](http://github.com/pasmod/simurg/images/architecture.jpg)
+![Image of Yaktocat](https://github.com/pasmod/simurg/blob/master/images/architecture.jpg)
 
 - Populating the template corpus
