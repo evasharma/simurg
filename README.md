@@ -10,7 +10,68 @@ Simurg is an open source framework to create an extensable multilingual corpus f
 
 ## Architecture
 Creating the corpus consists of two phases:
-- Constructing the template corpus
-![Image of Yaktocat](https://github.com/pasmod/simurg/blob/master/images/architecture.jpg)
+- Constructing the template corpus: The template corpus is the sharable part of the Simurg corpus.
 
-- Populating the template corpus
+<img src="https://github.com/pasmod/simurg/blob/master/images/architecture.jpg" width="250">
+- Populating the template corpus: In this phase the template corpus will be populated with all the required information and the result will be a collection of JSON documents.
+
+## Dependencies
+- [Docker](https://www.docker.com/)
+
+## Setup the Project
+- ```make build```: to build the docker image
+- ```make start_redis```: to start the redis server
+- ```make connect_redis```: to use the redis command line interface
+- ```make run```: to run the container
+
+## Template Corpus
+To create the template corpus use the following commands:
+
+```make run```: to run the container
+
+In the container run:
+
+```python```
+
+Then enter the following two python commands:
+```python
+import simurg
+simurg.create_template_corpus(lang='de')
+```
+
+## Populating the Template Corpus
+Run the following command to create the final corpus:
+
+```make run```: to run the container
+
+In the container run:
+
+```python```
+
+Then enter the following two python commands:
+```python
+import simurg
+simurg.populate_template_corpus(lang='de')
+```
+
+## Adding New Languages:
+Currently English, German, French and Italian are supported. Adding a new language is simple:
+In the file ```config.py``` modify the variable ```REDIS_DBS``` and add the new language code. Example to add Farsi:
+```python
+REDIS_DB = {
+    'de': 0,
+    'en': 1,
+    'fr': 2,
+    'it': 3,
+    'tr': 4
+}
+```
+
+## Paralle Execution
+If you want to construct a corpur for multiple languages at the same time, simply start several containers at the same time. For example to construct English, German, French and Italian corpus at the same time run the following commands:
+```bash
+make run # For the first language
+docker exec -it simurg bash -l # For the second language
+docker exec -it simurg bash -l # For the third language
+docker exec -it simurg bash -l # For the fourth language
+```
