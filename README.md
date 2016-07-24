@@ -1,5 +1,7 @@
-[![Build Status](https://travis-ci.org/pasmod/simurg.svg?branch=master)](https://travis-ci.org/pasmod/simurg)
 # Simurg
+
+[![Build Status](https://travis-ci.org/pasmod/simurg.svg?branch=master)](https://travis-ci.org/pasmod/simurg)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/fchollet/keras/blob/master/LICENSE)
 
 A tool to create extendable multilingual corpora for abstractive text summarization (and other applications).
 ## Motivation
