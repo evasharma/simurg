@@ -1,5 +1,5 @@
 name = simurg
-registry = hub.docker.com
+registry = pasmod
 
 build:
 	docker build -t $(registry)/$(name) $(BUILD_OPTS) .
