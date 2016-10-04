@@ -1,13 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from template import get_base_url, append_html, append_headline_selector
+from scrapper.template import get_base_url, append_html
+from scrapper.template import append_headline_selector
 from urlparse import urlparse, parse_qs
 from clients.redis_client import RedisClient
-from news_builder import build_news
+from scrapper.news_builder import build_news
 from util import is_valid
-import scrapper
-import template
+from scrapper.scrapper import get_story_urls
+from scrapper import template
 import logging
 import time
 import json
@@ -27,7 +25,7 @@ def create_template_corpus(lang='de'):
     redis_client = RedisClient(lang=lang)
     base_url = get_base_url(lang=lang)
     while True:
-        story_urls = scrapper.get_story_urls(base_url)
+        story_urls = get_story_urls(base_url)
         for url in story_urls:
             story = parse_qs(urlparse(url).query, keep_blank_values=True)['q']
             story = unicode(story[0])

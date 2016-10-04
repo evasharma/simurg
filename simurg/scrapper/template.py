@@ -3,8 +3,8 @@ from dragnet import content_extractor
 from collections import OrderedDict
 from unidecode import unidecode
 from bs4 import BeautifulSoup
-from clients.fetcher import fetch
-from util import is_valid
+from simurg.clients.fetcher import fetch
+from simurg.util import is_valid
 import logging
 import os.path
 import time

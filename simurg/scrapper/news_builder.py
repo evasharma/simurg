@@ -1,8 +1,8 @@
 from wayback import get_wayback_url
 from datetime import datetime
 from bs4 import BeautifulSoup
-from clients.fetcher import fetch
-import scrapper
+from simurg.clients.fetcher import fetch
+from simurg.scrapper import scrapper
 import logging
 import uuid
 
