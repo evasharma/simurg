@@ -1,7 +1,7 @@
 from wayback import get_wayback_url
 from datetime import datetime
 from bs4 import BeautifulSoup
-from fetcher import fetch
+from clients.fetcher import fetch
 import scrapper
 import logging
 import uuid

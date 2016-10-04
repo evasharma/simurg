@@ -3,7 +3,7 @@ from dragnet import content_extractor
 from collections import OrderedDict
 from unidecode import unidecode
 from bs4 import BeautifulSoup
-from fetcher import fetch
+from clients.fetcher import fetch
 from util import is_valid
 import logging
 import os.path
