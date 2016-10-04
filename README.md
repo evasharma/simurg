@@ -63,7 +63,7 @@ REDIS_DB = {
 }
 ```
 
-## Paralle Execution
+## Parallel Execution
 If you want to construct a corpur for multiple languages at the same time, simply start several containers at the same time. For example to construct English, German, French and Italian corpus at the same time run the following commands:
 ```bash
 make run # For the first language
