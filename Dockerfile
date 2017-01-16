@@ -20,5 +20,4 @@ WORKDIR /var/www
 ADD . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN py.test --pep8
-
+#RUN py.test --pep8
